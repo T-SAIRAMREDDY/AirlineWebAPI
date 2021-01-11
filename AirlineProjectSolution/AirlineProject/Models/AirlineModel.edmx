@@ -1,0 +1,573 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="dbAirlineReservationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="tblFlight_Details">
+          <Key>
+            <PropertyRef Name="Flight_ID" />
+          </Key>
+          <Property Name="Flight_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FC_Capacity" Type="int" />
+          <Property Name="BC_Capacity" Type="int" />
+          <Property Name="EC_Capacity" Type="int" />
+          <Property Name="status" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="tblFlight_Schedule">
+          <Key>
+            <PropertyRef Name="Schedule_ID" />
+          </Key>
+          <Property Name="Schedule_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Flight_ID" Type="int" />
+          <Property Name="Source_Loc" Type="varchar" MaxLength="20" />
+          <Property Name="Destination" Type="varchar" MaxLength="20" />
+          <Property Name="Dep_Time" Type="time" Precision="7" />
+          <Property Name="Arr_Time" Type="time" Precision="7" />
+          <Property Name="Duration" Type="time" Precision="7" />
+          <Property Name="Dep_Date" Type="date" />
+          <Property Name="status" Type="varchar" MaxLength="20" />
+          <Property Name="Price_FC" Type="float" />
+          <Property Name="Price_BC" Type="float" />
+          <Property Name="Price_EC" Type="float" />
+        </EntityType>
+        <EntityType Name="tblPassenger_Details">
+          <Key>
+            <PropertyRef Name="Passenger_ID" />
+          </Key>
+          <Property Name="Passenger_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Receipt_ID" Type="int" />
+          <Property Name="Passenger_Name" Type="varchar" MaxLength="30" />
+          <Property Name="Passenger_Age" Type="int" />
+          <Property Name="Seat_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="tblSeat_Details">
+          <Key>
+            <PropertyRef Name="Seat_ID" />
+          </Key>
+          <Property Name="Seat_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Schedule_ID" Type="int" />
+          <Property Name="Seat_No" Type="varchar" MaxLength="3" />
+          <Property Name="Seat_Class" Type="varchar" MaxLength="10" />
+          <Property Name="Seat_Status" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="tblTicket_Details">
+          <Key>
+            <PropertyRef Name="Receipt_ID" />
+          </Key>
+          <Property Name="Receipt_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Schedule_ID" Type="int" />
+          <Property Name="User_ID" Type="int" />
+          <Property Name="Trip_type" Type="varchar" MaxLength="5" />
+          <Property Name="Other_Receipt_ID" Type="int" />
+          <Property Name="Number_Of_Tickets" Type="int" />
+          <Property Name="Tickets_Status" Type="varchar" MaxLength="20" />
+          <Property Name="Total_Amount" Type="float" />
+        </EntityType>
+        <EntityType Name="tblUser">
+          <Key>
+            <PropertyRef Name="User_ID" />
+          </Key>
+          <Property Name="User_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Last_Name" Type="varchar" MaxLength="20" />
+          <Property Name="First_Name" Type="varchar" MaxLength="20" />
+          <Property Name="Phone" Type="varchar" MaxLength="10" />
+          <Property Name="Email" Type="varchar" MaxLength="30" />
+          <Property Name="Password" Type="varchar" MaxLength="10" />
+          <Property Name="DOB" Type="date" />
+        </EntityType>
+        <Association Name="FK__tblFlight__Fligh__3A81B327">
+          <End Role="tblFlight_Details" Type="Self.tblFlight_Details" Multiplicity="0..1" />
+          <End Role="tblFlight_Schedule" Type="Self.tblFlight_Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblFlight_Details">
+              <PropertyRef Name="Flight_ID" />
+            </Principal>
+            <Dependent Role="tblFlight_Schedule">
+              <PropertyRef Name="Flight_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPassen__Recei__4CA06362">
+          <End Role="tblTicket_Details" Type="Self.tblTicket_Details" Multiplicity="0..1" />
+          <End Role="tblPassenger_Details" Type="Self.tblPassenger_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTicket_Details">
+              <PropertyRef Name="Receipt_ID" />
+            </Principal>
+            <Dependent Role="tblPassenger_Details">
+              <PropertyRef Name="Receipt_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPassen__Seat___4D94879B">
+          <End Role="tblSeat_Details" Type="Self.tblSeat_Details" Multiplicity="0..1" />
+          <End Role="tblPassenger_Details" Type="Self.tblPassenger_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSeat_Details">
+              <PropertyRef Name="Seat_ID" />
+            </Principal>
+            <Dependent Role="tblPassenger_Details">
+              <PropertyRef Name="Seat_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblSeat_D__Sched__45F365D3">
+          <End Role="tblFlight_Schedule" Type="Self.tblFlight_Schedule" Multiplicity="0..1" />
+          <End Role="tblSeat_Details" Type="Self.tblSeat_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblFlight_Schedule">
+              <PropertyRef Name="Schedule_ID" />
+            </Principal>
+            <Dependent Role="tblSeat_Details">
+              <PropertyRef Name="Schedule_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblTicket__Sched__48CFD27E">
+          <End Role="tblFlight_Schedule" Type="Self.tblFlight_Schedule" Multiplicity="0..1" />
+          <End Role="tblTicket_Details" Type="Self.tblTicket_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblFlight_Schedule">
+              <PropertyRef Name="Schedule_ID" />
+            </Principal>
+            <Dependent Role="tblTicket_Details">
+              <PropertyRef Name="Schedule_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblTicket__User___49C3F6B7">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblTicket_Details" Type="Self.tblTicket_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="User_ID" />
+            </Principal>
+            <Dependent Role="tblTicket_Details">
+              <PropertyRef Name="User_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="cancel_tickets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="delete_flight" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="fid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="delete_schedule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="schedule_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="seat_numbers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Ticket_Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="ticket_details" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="dbAirlineReservationModelStoreContainer">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblFlight_Details" EntityType="Self.tblFlight_Details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblFlight_Schedule" EntityType="Self.tblFlight_Schedule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPassenger_Details" EntityType="Self.tblPassenger_Details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSeat_Details" EntityType="Self.tblSeat_Details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblTicket_Details" EntityType="Self.tblTicket_Details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblUser" EntityType="Self.tblUser" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__tblFlight__Fligh__3A81B327" Association="Self.FK__tblFlight__Fligh__3A81B327">
+            <End Role="tblFlight_Details" EntitySet="tblFlight_Details" />
+            <End Role="tblFlight_Schedule" EntitySet="tblFlight_Schedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPassen__Recei__4CA06362" Association="Self.FK__tblPassen__Recei__4CA06362">
+            <End Role="tblTicket_Details" EntitySet="tblTicket_Details" />
+            <End Role="tblPassenger_Details" EntitySet="tblPassenger_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPassen__Seat___4D94879B" Association="Self.FK__tblPassen__Seat___4D94879B">
+            <End Role="tblSeat_Details" EntitySet="tblSeat_Details" />
+            <End Role="tblPassenger_Details" EntitySet="tblPassenger_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblSeat_D__Sched__45F365D3" Association="Self.FK__tblSeat_D__Sched__45F365D3">
+            <End Role="tblFlight_Schedule" EntitySet="tblFlight_Schedule" />
+            <End Role="tblSeat_Details" EntitySet="tblSeat_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblTicket__Sched__48CFD27E" Association="Self.FK__tblTicket__Sched__48CFD27E">
+            <End Role="tblFlight_Schedule" EntitySet="tblFlight_Schedule" />
+            <End Role="tblTicket_Details" EntitySet="tblTicket_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblTicket__User___49C3F6B7" Association="Self.FK__tblTicket__User___49C3F6B7">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblTicket_Details" EntitySet="tblTicket_Details" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="dbAirlineReservationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="dbAirlineReservationEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="sysdiagrams" EntityType="dbAirlineReservationModel.sysdiagram" />
+          <EntitySet Name="tblFlight_Details" EntityType="dbAirlineReservationModel.tblFlight_Details" />
+          <EntitySet Name="tblFlight_Schedule" EntityType="dbAirlineReservationModel.tblFlight_Schedule" />
+          <EntitySet Name="tblPassenger_Details" EntityType="dbAirlineReservationModel.tblPassenger_Details" />
+          <EntitySet Name="tblSeat_Details" EntityType="dbAirlineReservationModel.tblSeat_Details" />
+          <EntitySet Name="tblTicket_Details" EntityType="dbAirlineReservationModel.tblTicket_Details" />
+          <EntitySet Name="tblUsers" EntityType="dbAirlineReservationModel.tblUser" />
+          <AssociationSet Name="FK__tblFlight__Fligh__3A81B327" Association="dbAirlineReservationModel.FK__tblFlight__Fligh__3A81B327">
+            <End Role="tblFlight_Details" EntitySet="tblFlight_Details" />
+            <End Role="tblFlight_Schedule" EntitySet="tblFlight_Schedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblSeat_D__Sched__45F365D3" Association="dbAirlineReservationModel.FK__tblSeat_D__Sched__45F365D3">
+            <End Role="tblFlight_Schedule" EntitySet="tblFlight_Schedule" />
+            <End Role="tblSeat_Details" EntitySet="tblSeat_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblTicket__Sched__48CFD27E" Association="dbAirlineReservationModel.FK__tblTicket__Sched__48CFD27E">
+            <End Role="tblFlight_Schedule" EntitySet="tblFlight_Schedule" />
+            <End Role="tblTicket_Details" EntitySet="tblTicket_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPassen__Recei__4CA06362" Association="dbAirlineReservationModel.FK__tblPassen__Recei__4CA06362">
+            <End Role="tblTicket_Details" EntitySet="tblTicket_Details" />
+            <End Role="tblPassenger_Details" EntitySet="tblPassenger_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPassen__Seat___4D94879B" Association="dbAirlineReservationModel.FK__tblPassen__Seat___4D94879B">
+            <End Role="tblSeat_Details" EntitySet="tblSeat_Details" />
+            <End Role="tblPassenger_Details" EntitySet="tblPassenger_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblTicket__User___49C3F6B7" Association="dbAirlineReservationModel.FK__tblTicket__User___49C3F6B7">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblTicket_Details" EntitySet="tblTicket_Details" />
+          </AssociationSet>
+          <FunctionImport Name="delete_flight">
+          <Parameter Name="fid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="delete_schedule">
+          <Parameter Name="schedule_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="seat_Details" ReturnType="Collection(Int32)">
+          <Parameter Name="Ticket_Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="ticket_details" ReturnType="Collection(dbAirlineReservationModel.ticket_details_Result)" />
+          <FunctionImport Name="seat_numbers" ReturnType="Collection(String)">
+          <Parameter Name="Ticket_Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="cancel_tickets">
+          <Parameter Name="id" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="tblFlight_Details">
+          <Key>
+            <PropertyRef Name="Flight_ID" />
+          </Key>
+          <Property Name="Flight_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FC_Capacity" Type="Int32" />
+          <Property Name="BC_Capacity" Type="Int32" />
+          <Property Name="EC_Capacity" Type="Int32" />
+          <NavigationProperty Name="tblFlight_Schedule" Relationship="dbAirlineReservationModel.FK__tblFlight__Fligh__3A81B327" FromRole="tblFlight_Details" ToRole="tblFlight_Schedule" />
+          <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tblFlight_Schedule">
+          <Key>
+            <PropertyRef Name="Schedule_ID" />
+          </Key>
+          <Property Name="Schedule_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Flight_ID" Type="Int32" />
+          <Property Name="Source_Loc" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Destination" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Dep_Time" Type="Time" Precision="7" />
+          <Property Name="Arr_Time" Type="Time" Precision="7" />
+          <Property Name="Duration" Type="Time" Precision="7" />
+          <Property Name="Dep_Date" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="tblFlight_Details" Relationship="dbAirlineReservationModel.FK__tblFlight__Fligh__3A81B327" FromRole="tblFlight_Schedule" ToRole="tblFlight_Details" />
+          <NavigationProperty Name="tblSeat_Details" Relationship="dbAirlineReservationModel.FK__tblSeat_D__Sched__45F365D3" FromRole="tblFlight_Schedule" ToRole="tblSeat_Details" />
+          <NavigationProperty Name="tblTicket_Details" Relationship="dbAirlineReservationModel.FK__tblTicket__Sched__48CFD27E" FromRole="tblFlight_Schedule" ToRole="tblTicket_Details" />
+          <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Price_FC" Type="Double" />
+          <Property Name="Price_BC" Type="Double" />
+          <Property Name="Price_EC" Type="Double" />
+        </EntityType>
+        <EntityType Name="tblPassenger_Details">
+          <Key>
+            <PropertyRef Name="Passenger_ID" />
+          </Key>
+          <Property Name="Passenger_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Receipt_ID" Type="Int32" />
+          <Property Name="Passenger_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Passenger_Age" Type="Int32" />
+          <Property Name="Seat_ID" Type="Int32" />
+          <NavigationProperty Name="tblTicket_Details" Relationship="dbAirlineReservationModel.FK__tblPassen__Recei__4CA06362" FromRole="tblPassenger_Details" ToRole="tblTicket_Details" />
+          <NavigationProperty Name="tblSeat_Details" Relationship="dbAirlineReservationModel.FK__tblPassen__Seat___4D94879B" FromRole="tblPassenger_Details" ToRole="tblSeat_Details" />
+        </EntityType>
+        <EntityType Name="tblSeat_Details">
+          <Key>
+            <PropertyRef Name="Seat_ID" />
+          </Key>
+          <Property Name="Seat_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Schedule_ID" Type="Int32" />
+          <Property Name="Seat_No" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="Seat_Class" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Seat_Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tblFlight_Schedule" Relationship="dbAirlineReservationModel.FK__tblSeat_D__Sched__45F365D3" FromRole="tblSeat_Details" ToRole="tblFlight_Schedule" />
+          <NavigationProperty Name="tblPassenger_Details" Relationship="dbAirlineReservationModel.FK__tblPassen__Seat___4D94879B" FromRole="tblSeat_Details" ToRole="tblPassenger_Details" />
+        </EntityType>
+        <EntityType Name="tblTicket_Details">
+          <Key>
+            <PropertyRef Name="Receipt_ID" />
+          </Key>
+          <Property Name="Receipt_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Schedule_ID" Type="Int32" />
+          <Property Name="User_ID" Type="Int32" />
+          <Property Name="Trip_type" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Other_Receipt_ID" Type="Int32" />
+          <Property Name="Number_Of_Tickets" Type="Int32" />
+          <Property Name="Tickets_Status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Total_Amount" Type="Double" />
+          <NavigationProperty Name="tblFlight_Schedule" Relationship="dbAirlineReservationModel.FK__tblTicket__Sched__48CFD27E" FromRole="tblTicket_Details" ToRole="tblFlight_Schedule" />
+          <NavigationProperty Name="tblPassenger_Details" Relationship="dbAirlineReservationModel.FK__tblPassen__Recei__4CA06362" FromRole="tblTicket_Details" ToRole="tblPassenger_Details" />
+          <NavigationProperty Name="tblUser" Relationship="dbAirlineReservationModel.FK__tblTicket__User___49C3F6B7" FromRole="tblTicket_Details" ToRole="tblUser" />
+        </EntityType>
+        <EntityType Name="tblUser">
+          <Key>
+            <PropertyRef Name="User_ID" />
+          </Key>
+          <Property Name="User_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Last_Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="First_Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Phone" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="DOB" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="tblTicket_Details" Relationship="dbAirlineReservationModel.FK__tblTicket__User___49C3F6B7" FromRole="tblUser" ToRole="tblTicket_Details" />
+        </EntityType>
+        <Association Name="FK__tblFlight__Fligh__3A81B327">
+          <End Type="dbAirlineReservationModel.tblFlight_Details" Role="tblFlight_Details" Multiplicity="0..1" />
+          <End Type="dbAirlineReservationModel.tblFlight_Schedule" Role="tblFlight_Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblFlight_Details">
+              <PropertyRef Name="Flight_ID" />
+            </Principal>
+            <Dependent Role="tblFlight_Schedule">
+              <PropertyRef Name="Flight_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblSeat_D__Sched__45F365D3">
+          <End Type="dbAirlineReservationModel.tblFlight_Schedule" Role="tblFlight_Schedule" Multiplicity="0..1" />
+          <End Type="dbAirlineReservationModel.tblSeat_Details" Role="tblSeat_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblFlight_Schedule">
+              <PropertyRef Name="Schedule_ID" />
+            </Principal>
+            <Dependent Role="tblSeat_Details">
+              <PropertyRef Name="Schedule_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblTicket__Sched__48CFD27E">
+          <End Type="dbAirlineReservationModel.tblFlight_Schedule" Role="tblFlight_Schedule" Multiplicity="0..1" />
+          <End Type="dbAirlineReservationModel.tblTicket_Details" Role="tblTicket_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblFlight_Schedule">
+              <PropertyRef Name="Schedule_ID" />
+            </Principal>
+            <Dependent Role="tblTicket_Details">
+              <PropertyRef Name="Schedule_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPassen__Recei__4CA06362">
+          <End Type="dbAirlineReservationModel.tblTicket_Details" Role="tblTicket_Details" Multiplicity="0..1" />
+          <End Type="dbAirlineReservationModel.tblPassenger_Details" Role="tblPassenger_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTicket_Details">
+              <PropertyRef Name="Receipt_ID" />
+            </Principal>
+            <Dependent Role="tblPassenger_Details">
+              <PropertyRef Name="Receipt_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPassen__Seat___4D94879B">
+          <End Type="dbAirlineReservationModel.tblSeat_Details" Role="tblSeat_Details" Multiplicity="0..1" />
+          <End Type="dbAirlineReservationModel.tblPassenger_Details" Role="tblPassenger_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSeat_Details">
+              <PropertyRef Name="Seat_ID" />
+            </Principal>
+            <Dependent Role="tblPassenger_Details">
+              <PropertyRef Name="Seat_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblTicket__User___49C3F6B7">
+          <End Type="dbAirlineReservationModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+          <End Type="dbAirlineReservationModel.tblTicket_Details" Role="tblTicket_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="User_ID" />
+            </Principal>
+            <Dependent Role="tblTicket_Details">
+              <PropertyRef Name="User_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="ticket_details_Result">
+          <Property Type="Int32" Name="Receipt_ID" Nullable="false" />
+          <Property Type="Int32" Name="Schedule_ID" Nullable="true" />
+          <Property Type="Int32" Name="Number_Of_Tickets" Nullable="true" />
+          <Property Type="String" Name="Tickets_Status" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Source_Loc" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Destination" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="Dep_Date" Nullable="true" />
+          <Property Type="Time" Name="Dep_Time" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="dbAirlineReservationModelStoreContainer" CdmEntityContainer="dbAirlineReservationEntities">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="dbAirlineReservationModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblFlight_Details">
+            <EntityTypeMapping TypeName="dbAirlineReservationModel.tblFlight_Details">
+              <MappingFragment StoreEntitySet="tblFlight_Details">
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="EC_Capacity" ColumnName="EC_Capacity" />
+                <ScalarProperty Name="BC_Capacity" ColumnName="BC_Capacity" />
+                <ScalarProperty Name="FC_Capacity" ColumnName="FC_Capacity" />
+                <ScalarProperty Name="Flight_ID" ColumnName="Flight_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblFlight_Schedule">
+            <EntityTypeMapping TypeName="dbAirlineReservationModel.tblFlight_Schedule">
+              <MappingFragment StoreEntitySet="tblFlight_Schedule">
+                <ScalarProperty Name="Price_EC" ColumnName="Price_EC" />
+                <ScalarProperty Name="Price_BC" ColumnName="Price_BC" />
+                <ScalarProperty Name="Price_FC" ColumnName="Price_FC" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="Dep_Date" ColumnName="Dep_Date" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="Arr_Time" ColumnName="Arr_Time" />
+                <ScalarProperty Name="Dep_Time" ColumnName="Dep_Time" />
+                <ScalarProperty Name="Destination" ColumnName="Destination" />
+                <ScalarProperty Name="Source_Loc" ColumnName="Source_Loc" />
+                <ScalarProperty Name="Flight_ID" ColumnName="Flight_ID" />
+                <ScalarProperty Name="Schedule_ID" ColumnName="Schedule_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPassenger_Details">
+            <EntityTypeMapping TypeName="dbAirlineReservationModel.tblPassenger_Details">
+              <MappingFragment StoreEntitySet="tblPassenger_Details">
+                <ScalarProperty Name="Seat_ID" ColumnName="Seat_ID" />
+                <ScalarProperty Name="Passenger_Age" ColumnName="Passenger_Age" />
+                <ScalarProperty Name="Passenger_Name" ColumnName="Passenger_Name" />
+                <ScalarProperty Name="Receipt_ID" ColumnName="Receipt_ID" />
+                <ScalarProperty Name="Passenger_ID" ColumnName="Passenger_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSeat_Details">
+            <EntityTypeMapping TypeName="dbAirlineReservationModel.tblSeat_Details">
+              <MappingFragment StoreEntitySet="tblSeat_Details">
+                <ScalarProperty Name="Seat_Status" ColumnName="Seat_Status" />
+                <ScalarProperty Name="Seat_Class" ColumnName="Seat_Class" />
+                <ScalarProperty Name="Seat_No" ColumnName="Seat_No" />
+                <ScalarProperty Name="Schedule_ID" ColumnName="Schedule_ID" />
+                <ScalarProperty Name="Seat_ID" ColumnName="Seat_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTicket_Details">
+            <EntityTypeMapping TypeName="dbAirlineReservationModel.tblTicket_Details">
+              <MappingFragment StoreEntitySet="tblTicket_Details">
+                <ScalarProperty Name="Total_Amount" ColumnName="Total_Amount" />
+                <ScalarProperty Name="Tickets_Status" ColumnName="Tickets_Status" />
+                <ScalarProperty Name="Number_Of_Tickets" ColumnName="Number_Of_Tickets" />
+                <ScalarProperty Name="Other_Receipt_ID" ColumnName="Other_Receipt_ID" />
+                <ScalarProperty Name="Trip_type" ColumnName="Trip_type" />
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+                <ScalarProperty Name="Schedule_ID" ColumnName="Schedule_ID" />
+                <ScalarProperty Name="Receipt_ID" ColumnName="Receipt_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblUsers">
+            <EntityTypeMapping TypeName="dbAirlineReservationModel.tblUser">
+              <MappingFragment StoreEntitySet="tblUser">
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="First_Name" ColumnName="First_Name" />
+                <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="delete_flight" FunctionName="dbAirlineReservationModel.Store.delete_flight" />
+          <FunctionImportMapping FunctionImportName="delete_schedule" FunctionName="dbAirlineReservationModel.Store.delete_schedule" />
+          <FunctionImportMapping FunctionImportName="ticket_details" FunctionName="dbAirlineReservationModel.Store.ticket_details">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="dbAirlineReservationModel.ticket_details_Result">
+                <ScalarProperty Name="Receipt_ID" ColumnName="Receipt_ID" />
+                <ScalarProperty Name="Schedule_ID" ColumnName="Schedule_ID" />
+                <ScalarProperty Name="Number_Of_Tickets" ColumnName="Number_Of_Tickets" />
+                <ScalarProperty Name="Tickets_Status" ColumnName="Tickets_Status" />
+                <ScalarProperty Name="Source_Loc" ColumnName="Source_Loc" />
+                <ScalarProperty Name="Destination" ColumnName="Destination" />
+                <ScalarProperty Name="Dep_Date" ColumnName="Dep_Date" />
+                <ScalarProperty Name="Dep_Time" ColumnName="Dep_Time" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="seat_numbers" FunctionName="dbAirlineReservationModel.Store.seat_numbers" />
+          <FunctionImportMapping FunctionImportName="cancel_tickets" FunctionName="dbAirlineReservationModel.Store.cancel_tickets" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
